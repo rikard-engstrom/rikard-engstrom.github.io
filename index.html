@@ -28,6 +28,14 @@
         <div id="debug"></div>
     </div>
     <script>
+    // { video: true }
+
+        let constraints = {
+            audio: false,
+            video: {
+                facingMode: "environment"
+            }
+        };
 
         function hasGetUserMedia() {
             return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
@@ -45,7 +53,7 @@
         //alert("Hello");
         var video = document.querySelector("#videoElement");
         if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
+            navigator.mediaDevices.getUserMedia(constraints)
                 .then(function (stream) {
                     video.srcObject = stream;
                 })
