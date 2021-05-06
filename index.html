@@ -25,6 +25,7 @@
 <body>
     <div id="container">
         <video autoplay="true" id="videoElement"></video>
+        <div id="debug"></div>
     </div>
     <script>
 
@@ -35,6 +36,8 @@
         if (hasGetUserMedia()) {
             // Good to go!
             alert("Media ok");
+            let devices = navigator.mediaDevices.enumerateDevices();
+            alert(JSON.stringify(devices);
         } else {
             alert("getUserMedia() is not supported by your browser");
         }
