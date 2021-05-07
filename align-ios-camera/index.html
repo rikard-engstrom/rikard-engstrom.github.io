@@ -51,7 +51,7 @@
 
         #canvas {
             position: absolute;
-            z-index: 200;
+            z-index: 50;
         }
 
         .material-icons {
@@ -137,7 +137,6 @@
         }
 
         function alignElements() {
-            console.log('alignElements');
             let videoWidth = video.offsetWidth;
             let videoHeight = video.offsetHeight;
             video.style.left = Math.round((width / 2) - (videoWidth / 2)) + "px";
@@ -177,7 +176,7 @@
         }
 
         showMedia();
-        alignElements();        
+        alignElements();
     </script>
 </body>
 
