@@ -22,11 +22,13 @@
         }
 
         #container {
-            margin-left: auto;
-            margin-right: auto;
-            /* height: 100%; */
             box-sizing: border-box;
-            /* width:90%; */
+            display: inline-block;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            padding: 0;
+            margin: 0;
         }
 
         .buttons {
@@ -36,20 +38,20 @@
         }
 
         .button {
-            color: darkorange;
             background-color: #333;
+            color: darkorange;
             border: none;
             height: 24px;
             padding: 1px 6px;
         }
 
-        #videoElement {
-            border: solid 2px #333;
-            /* width: 100%; */
-            /* min-height: 50%;
-            min-width: 50%; */
-            /* height: 100%; */
-            /* background-color: #666; */
+        #video {
+            position: absolute;
+        }
+
+        #canvas {
+            position: absolute;
+            z-index: 200;
         }
 
         .material-icons {
@@ -57,7 +59,6 @@
             font-weight: normal;
             font-style: normal;
             font-size: 24px;
-            /* Preferred icon size */
             display: inline-block;
             line-height: 1;
             text-transform: none;
@@ -65,16 +66,9 @@
             word-wrap: normal;
             white-space: nowrap;
             direction: ltr;
-
-            /* Support for all WebKit browsers. */
             -webkit-font-smoothing: antialiased;
-            /* Support for Safari and Chrome. */
             text-rendering: optimizeLegibility;
-
-            /* Support for Firefox. */
             -moz-osx-font-smoothing: grayscale;
-
-            /* Support for IE. */
             font-feature-settings: 'liga';
         }
     </style>
@@ -83,40 +77,48 @@
 <body>
     <div id="container">
         <div class="buttons">
-            <button class="button" onclick="selectFrontCamera()">
-                <span class="material-icons">video_camera_front</span>
-            </button><br />
             <button class="button" onclick="selectBackCamera()">
                 <span class="material-icons">video_camera_back</span>
             </button><br/>
+            <button class="button" onclick="selectFrontCamera()">
+                <span class="material-icons">video_camera_front</span>
+            </button><br />
             <a class="button" href="https://rikard-engstrom.github.io/">
                 <span class="material-icons">close</span>
             </a>
         </div>
-        <video autoplay="true" id="videoElement"></video>
-        <div id="debug"></div>
+        <video id="video" autoplay="true"></video>
+        <canvas id="canvas"></canvas>
     </div>
     <script>
+        let width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+        let height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
         let constraints = {
             audio: false,
             video: {
-                facingMode: "environment"
+                facingMode: "environment",
+                width: { ideal: width },
+                height: { ideal: height } 
             }
         };
 
-        let video = document.querySelector("#videoElement");
+        let video = document.querySelector("#video");
+        video.addEventListener('resize', alignElements);
+
+        let canvas = document.querySelector("#canvas");
 
         function hasGetUserMedia() {
             return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
         }
 
         function selectFrontCamera() {
-            constraints.video.facingMode = "environment"
+            constraints.video.facingMode = "user"
             showMedia();
         }
 
         function selectBackCamera() {
-            constraints.video.facingMode = "user"
+            constraints.video.facingMode = "environment"
             showMedia();
         }
 
@@ -134,7 +136,48 @@
             }
         }
 
+        function alignElements() {
+            console.log('alignElements');
+            let videoWidth = video.offsetWidth;
+            let videoHeight = video.offsetHeight;
+            video.style.left = Math.round((width / 2) - (videoWidth / 2)) + "px";
+            video.style.top = Math.round((height / 2) - (videoHeight / 2)) + "px";
+
+            canvas.width = videoWidth;
+            canvas.height = videoHeight;
+            canvas.style.left = video.style.left;
+            canvas.style.top = video.style.top;
+
+            drawAlignmentGrid();
+        }
+
+        function drawAlignmentGrid() {
+            let videoWidth = video.offsetWidth;
+            let videoHeight = video.offsetHeight;
+
+            var ctx = canvas.getContext("2d");
+            ctx.strokeStyle = "#FFF"
+
+            // verticle center
+            ctx.moveTo(videoWidth / 2, 0);
+            ctx.lineTo(videoWidth / 2, videoHeight);
+
+            // horizontal center
+            ctx.moveTo(0, videoHeight / 2);
+            ctx.lineTo(videoWidth, videoHeight/2);
+
+            // outerbox
+            let outerBoxWidth = videoWidth * 0.75;
+            let outerBoxHeight = videoHeight * 0.75;
+            let outerTop = videoHeight * 0.125;
+            let outerLeft = videoWidth * 0.125;
+            ctx.rect(outerLeft, outerTop, outerBoxWidth, outerBoxHeight);
+
+            ctx.stroke();
+        }
+
         showMedia();
+        alignElements();        
     </script>
 </body>
 
