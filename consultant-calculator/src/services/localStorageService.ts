@@ -32,7 +32,7 @@ export class LocalStorageService {
     }
 
     static getHourRate(): number {
-        return Number.parseInt(localStorage.getItem("invoicing:hour:rate") || "1070") || 1070;
+        return Number.parseInt(localStorage.getItem("invoicing:hour:rate") || "800") || 800;
     }
 
     static setHourRate(hourRate: number) {

@@ -6,9 +6,9 @@ export class CalculationYear {
     public workDays!: number;
     public vacationDays!: number;
     public hourRate!: number;
-    public brokerFee = 10;
-    public grossSalaryMonthly = 680400 / 12;
-    public vacationSalary = 11340;
+    public brokerFee = 15;
+    public grossSalaryMonthly = 50000;
+    public vacationSalary = 0;
     public pensionSavings = 0;
 
     public invoiced(): number {
