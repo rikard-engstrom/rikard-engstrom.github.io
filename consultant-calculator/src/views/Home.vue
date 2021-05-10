@@ -6,7 +6,7 @@
           <v-card-title>Företagskonto</v-card-title>
           <v-card-text>
             <calculation-row label="Fakturerat" :value="year.invoiced()">
-              <calculation-text-field label="Dagar" v-model="year.workDays" />
+              <calculation-text-field label="Arbetsdagar" v-model="year.workDays" />
               <div class="ml-2 mr-2 form-text-middle">-</div>
               <calculation-text-field
                 v-model="year.vacationDays"
@@ -29,11 +29,7 @@
               />
               <div class="ml-2 mr-2 form-text-middle">x 12</div>
             </calculation-row>
-            <calculation-row label="Semesterers." :value="-year.vacationSalary">
-              <calculation-text-field
-                v-model="year.vacationSalary"
-                label="Semesterersättning"
-              />
+            <calculation-row label="Semesterers." :value="-year.vacationSalary()">
             </calculation-row>
             <calculation-row label="ITPK" :value="-year.pensionItpk()" />
             <calculation-row
@@ -80,12 +76,12 @@
           <v-card-text>
             <calculation-row
               label="Bruttolön"
-              :value="year.grossSalary"
+              :value="year.grossSalary()"
               left-cols="0"
             />
             <calculation-row
               label="Semesterers."
-              :value="year.vacationSalary"
+              :value="year.vacationSalary()"
               left-cols="0"
             />
             <calculation-row

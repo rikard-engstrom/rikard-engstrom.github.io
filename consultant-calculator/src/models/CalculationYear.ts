@@ -1,4 +1,6 @@
 import { taxTableService } from "@/services/taxTableService";
+import { InvoicingModule } from "@/store/modules/invoicing";
+import { SalaryModule } from "@/store/modules/salary";
 
 export class CalculationYear {
     private baseAmount = 47600;
@@ -8,7 +10,6 @@ export class CalculationYear {
     public hourRate!: number;
     public brokerFee = 15;
     public grossSalaryMonthly = 50000;
-    public vacationSalary = 0;
     public pensionSavings = 0;
 
     public invoiced(): number {
@@ -19,13 +20,17 @@ export class CalculationYear {
         return this.grossSalaryMonthly * 12;
     }
 
+    public vacationSalary(): number {
+        return this.grossSalaryMonthly * (0.43 / 100) * SalaryModule.vacationDays;
+    }
+
     public brokerCost(): number {
         return -this.invoiced() * this.brokerFee / 100;
     }
 
     public socialFee(): number {
         return (-this.grossSalary() * 0.3142)
-            + (-this.vacationSalary * 0.3142)
+            + (-this.vacationSalary() * 0.3142)
             + (-this.pensionSavings * 0.2426);
     }
 
@@ -40,11 +45,14 @@ export class CalculationYear {
             + this.pensionSalary()
             - this.pensionItpk()
             - this.grossSalary()
-            - this.vacationSalary;
+            - this.vacationSalary();
     }
 
     public companyTaxRate(): number {
-        return 21;
+        if (InvoicingModule.ownCompany)
+            return  21;
+
+        return 0;
     }
 
     public companyTax(): number {
@@ -60,12 +68,12 @@ export class CalculationYear {
     }
 
     public async privateTaxAmount(): Promise<number> {
-        const monthlyGrossSalary = (this.grossSalary() + this.vacationSalary) / 12;
+        const monthlyGrossSalary = (this.grossSalary() + this.vacationSalary()) / 12;
         const taxAmount = await taxTableService.getTaxAmount(33, 2021, monthlyGrossSalary);
         return -taxAmount * 12;
     }
 
     public async privateNetSalary(): Promise<number> {
-        return this.grossSalary() + this.vacationSalary + await this.privateTaxAmount();
+        return this.grossSalary() + this.vacationSalary() + await this.privateTaxAmount();
     }
 }

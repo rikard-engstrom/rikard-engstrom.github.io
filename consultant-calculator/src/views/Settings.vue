@@ -10,6 +10,10 @@
             type="number"
           />
           <v-text-field v-model="vm.hourRate" label="Timpris" type="number" />
+          <v-checkbox
+            v-model="vm.ownCompany"
+            label="Egen firma"
+          />
         </v-card-text>
       </v-card>
 
@@ -85,6 +89,7 @@ export default class Settings extends Vue {
   private vm = {
     workDays: InvoicingModule.workDays,
     hourRate: InvoicingModule.hourRate,
+    ownCompany: InvoicingModule.ownCompany,
     vacationDays: SalaryModule.vacationDays,
     counties: placeService.getCounties(),
     taxTable: TaxModule.taxTable,
@@ -105,6 +110,16 @@ export default class Settings extends Vue {
   @Watch("vm.hourRate")
   onHourRateChanged(value: number) {
     InvoicingModule.setHourRate(value);
+  }
+
+  @Watch("vm.ownCompany")
+  onOwnCompany(value: boolean) {
+    InvoicingModule.setOwnCompany(value);
+  }
+
+  @Watch("vm.vacationDays")
+  onVacationDays(value: number) {
+    SalaryModule.setVacationDays(value);
   }
 
   @Watch("vm.countyCode")

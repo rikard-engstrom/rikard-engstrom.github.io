@@ -4,6 +4,8 @@
       <v-tabs color="white">
         <v-tab link to="/">Kalkyl</v-tab>
         <v-tab link to="/settings">Inställningar</v-tab>
+        <v-divider />
+        <v-tab link href="https://rikard-engstrom.github.io/">Close</v-tab>
       </v-tabs>
     </v-app-bar>
     <v-main>

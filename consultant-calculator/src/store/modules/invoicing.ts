@@ -5,21 +5,23 @@ import { LocalStorageService } from '@/services/localStorageService';
 export interface InvoicingState {
     workDays: number;
     hourRate: number;
+    ownCompany: boolean;
 }
 
 @Module({ dynamic: true, store, name: 'invoicing' })
 class Invoicing extends VuexModule implements InvoicingState {
     workDays: number = LocalStorageService.getYearlyWorkDays();
     hourRate: number = LocalStorageService.getHourRate();
+    ownCompany: boolean = LocalStorageService.getOwnCompany();
 
     @Mutation
-    setYearlyHoursMutation(days: number) {
+    setYearlyWorkDaysMutation(days: number) {
         LocalStorageService.setYearlyWorkDays(days);
     }
 
     @Action
     public setYearlyWorkDays(days: number) {
-        this.setYearlyHoursMutation(days);
+        this.setYearlyWorkDaysMutation(days);
     }
 
     @Mutation
@@ -30,6 +32,15 @@ class Invoicing extends VuexModule implements InvoicingState {
 
     @Action setHourRate(hourRate: number) {
         this.setHourRateMutation(hourRate);
+    }
+
+    @Mutation setOwnCompanyMutation(value: boolean) {
+        this.ownCompany = value;
+        LocalStorageService.setOwnCompany(value);
+    }
+
+    @Action setOwnCompany(value: boolean) {
+        this.setOwnCompanyMutation(value);
     }
 }
 

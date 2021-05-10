@@ -12,11 +12,12 @@ class Salary extends VuexModule implements SalaryState {
 
     @Mutation
     setVacationDaysMutation(days: number) {
+        this.vacationDays = days;
         LocalStorageService.setVacationDays(days);
     }
 
     @Action
-    public setVacationDays(days: number) {
+    public setVacationDays(days: number) {        
         this.setVacationDaysMutation(days);
     }
 }

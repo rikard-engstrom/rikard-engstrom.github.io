@@ -23,12 +23,20 @@ export class LocalStorageService {
         localStorage.setItem(key, JSON.stringify(taxTable));
     }
 
+    static setOwnCompany(value: boolean) {
+        localStorage.setItem("invoicing:ownCompany", value.toString());
+    }
+
+    static getOwnCompany(): boolean {
+        return localStorage.getItem("invoicing:ownCompany") == "true";
+    }
+
     static getVacationDays(): number {
         return Number.parseInt(localStorage.getItem("invoicing:vacation:days") || "30") || 30;
     }
 
     static setVacationDays(days: number) {
-        throw new Error('Method not implemented.');
+        localStorage.setItem("invoicing:vacation:days", days.toString());
     }
 
     static getHourRate(): number {
@@ -42,7 +50,7 @@ export class LocalStorageService {
     static getYearlyWorkDays(): number {
         // 160 x 12 = 1920
         // 250 x 8 = 2000;
-        return Number.parseInt(localStorage.getItem("invoicing:yearly:workDays") || "2000") || 2000;
+        return Number.parseInt(localStorage.getItem("invoicing:yearly:workDays") || "250") || 250;
     }
 
     static setYearlyWorkDays(days: number) {
